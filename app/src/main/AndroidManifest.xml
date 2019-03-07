@@ -25,6 +25,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.favemerchants.FaveMerchantsActivity"
+            android:theme="@style/AppTheme"/>
+
     </application>
 
 </manifest>
