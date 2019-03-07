@@ -9,7 +9,9 @@ import com.android.favemerchants.R
 import com.android.favemerchants.data.model.Merchant
 import com.android.favemerchants.ui.base.BaseMvpActivity
 import com.android.favemerchants.ui.base.BasePresenter
+import com.android.favemerchants.ui.searchmerchants.MerchantsSearchActivity
 import kotlinx.android.synthetic.main.activity_fave_merchants.*
+import org.jetbrains.anko.startActivity
 import javax.inject.Inject
 
 
@@ -41,6 +43,7 @@ class FaveMerchantsActivity : BaseMvpActivity(), FaveMerchantsContracts.View {
         menuInflater.inflate(R.menu.menu_main, menu)
         val menuItem = menu.findItem(R.id.action_open_search)
         menuItem?.setOnMenuItemClickListener {
+            mPresenter.onSearchClick()
             true
         }
         return true
@@ -64,7 +67,8 @@ class FaveMerchantsActivity : BaseMvpActivity(), FaveMerchantsContracts.View {
     }
 
     override fun openSearchScreen() {
-
+        startActivity<MerchantsSearchActivity>()
+        overridePendingTransition(R.anim.enter_search_activiaty_animation, android.R.anim.fade_out)
     }
 
     override fun openEmailMerchantScreen(merchantName: String, email: String) {
