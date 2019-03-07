@@ -1,8 +1,8 @@
 package com.android.favemerchants;
 
 import android.app.Application;
+import com.android.favemerchants.di.ComponentFactory;
 import com.android.favemerchants.di.component.ApplicationComponent;
-import com.android.favemerchants.di.component.DaggerApplicationComponent;
 
 public class App extends Application {
 
@@ -16,11 +16,7 @@ public class App extends Application {
 
     protected void initDagger() {
 
-        ApplicationComponent appComponent = DaggerApplicationComponent
-                .builder()
-                .application(this)
-                .build();
-
+        ApplicationComponent appComponent = ComponentFactory.getComponent(this);
         setComponent(appComponent);
     }
 
@@ -30,6 +26,7 @@ public class App extends Application {
 
     public void setComponent(ApplicationComponent component) {
         this.component = component;
+
         component.inject(this);
     }
 }
