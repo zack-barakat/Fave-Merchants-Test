@@ -9,4 +9,5 @@
     <string name="action_search">Search</string>
     <string name="email_merchant_title">Send email to %s</string>
     <string name="text_no_search_result">Your search did not have any results</string>
+    <string name="text_partner_website">Partner Website</string>
 </resources>

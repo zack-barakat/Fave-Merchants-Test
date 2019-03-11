@@ -1,5 +1,6 @@
 package com.android.favemerchants.ui.favemerchants
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -50,9 +51,11 @@ class FaveMerchantsActivity : BaseMvpActivity(), FaveMerchantsContracts.View {
     }
 
     private fun setupMerchantsRecyclerView() {
-        mAdapter = MerchantsAdapter { position ->
+        mAdapter = MerchantsAdapter({ position ->
             mPresenter.onEmailMerchantClick(position)
-        }
+        }, { position ->
+            mPresenter.onMerchantNameClick(position)
+        })
         rvMerchants.adapter = mAdapter
         val gridLayoutManager = LinearLayoutManager(this)
         rvMerchants.layoutManager = gridLayoutManager
@@ -77,5 +80,15 @@ class FaveMerchantsActivity : BaseMvpActivity(), FaveMerchantsContracts.View {
         val emailTitle =
             String.format(getString(com.android.favemerchants.R.string.email_merchant_title), merchantName)
         startActivity(Intent.createChooser(intent, emailTitle))
+    }
+
+    override fun openMerchantWebsite(website: String) {
+        try {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(website))
+            startActivity(browserIntent)
+        } catch (e: ActivityNotFoundException) {
+            e.printStackTrace()
+        }
+
     }
 }

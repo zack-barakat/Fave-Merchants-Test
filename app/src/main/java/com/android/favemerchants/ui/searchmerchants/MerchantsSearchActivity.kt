@@ -1,5 +1,8 @@
 package com.android.favemerchants.ui.searchmerchants
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -85,7 +88,11 @@ class MerchantsSearchActivity : BaseMvpActivity(), MerchantsSearchContracts.View
     }
 
     private fun setupSearchResultRecyclerView() {
-        mMerchantsSearchAdapter = MerchantsAdapter { mPresenter.onEmailMerchantClick(it) }
+        mMerchantsSearchAdapter = MerchantsAdapter({
+            mPresenter.onEmailMerchantClick(it)
+        }, {
+            mPresenter.onMerchantNameClick(it)
+        })
         rvSearchMerchants.adapter = mMerchantsSearchAdapter
 
         val gridManager = LinearLayoutManager(this)
@@ -121,6 +128,20 @@ class MerchantsSearchActivity : BaseMvpActivity(), MerchantsSearchContracts.View
     }
 
     override fun openEmailMerchantScreen(merchantName: String, email: String) {
+        val intent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null))
+        intent.putExtra(Intent.EXTRA_EMAIL, email)
+        val emailTitle =
+            String.format(getString(com.android.favemerchants.R.string.email_merchant_title), merchantName)
+        startActivity(Intent.createChooser(intent, emailTitle))
+    }
+
+    override fun openMerchantWebsite(website: String) {
+        try {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(website))
+            startActivity(browserIntent)
+        } catch (e: ActivityNotFoundException) {
+            e.printStackTrace()
+        }
 
     }
 }

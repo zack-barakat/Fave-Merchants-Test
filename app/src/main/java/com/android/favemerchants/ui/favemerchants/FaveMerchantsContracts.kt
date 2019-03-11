@@ -13,11 +13,15 @@ interface FaveMerchantsContracts {
 
         fun openEmailMerchantScreen(merchantName: String, email: String)
 
+        fun openMerchantWebsite(website: String)
+
     }
 
     interface Presenter<V : View> : BasePresenter<V> {
         fun onSearchClick()
 
         fun onEmailMerchantClick(position: Int)
+
+        fun onMerchantNameClick(position: Int)
     }
 }

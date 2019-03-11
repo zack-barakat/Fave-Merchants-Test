@@ -43,4 +43,13 @@ constructor(dataManager: IDataManager) : BaseMvpPresenter<FaveMerchantsContracts
             view.openEmailMerchantScreen(name, email)
         }
     }
+
+    override fun onMerchantNameClick(position: Int) {
+        if (mMerchants.size >= position) {
+            val merchant = mMerchants[position]
+            if (merchant.website.isNotEmpty()) {
+                view.openMerchantWebsite(merchant.website)
+            }
+        }
+    }
 }

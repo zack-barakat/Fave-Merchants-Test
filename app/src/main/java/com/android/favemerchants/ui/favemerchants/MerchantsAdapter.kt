@@ -1,5 +1,6 @@
 package com.android.favemerchants.ui.favemerchants
 
+import android.graphics.Paint
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,10 @@ import com.android.favemerchants.data.model.Merchant
 import kotlinx.android.synthetic.main.item_merchant.view.*
 
 
-class MerchantsAdapter(val onEmailMerchantClick: (position: Int) -> Unit) :
+class MerchantsAdapter(
+    val onMerchantEmailClick: (position: Int) -> Unit,
+    val onMerchantWebClick: (position: Int) -> Unit
+) :
     RecyclerView.Adapter<MerchantsAdapter.MerchantHolder>() {
 
     private var mMerchants = arrayListOf<Merchant>()
@@ -33,10 +37,22 @@ class MerchantsAdapter(val onEmailMerchantClick: (position: Int) -> Unit) :
     inner class MerchantHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(merchant: Merchant) {
             with(itemView) {
+                if (merchant.website.isNotEmpty()) {
+                    tvMerchantWebsite.visibility = View.VISIBLE
+                    tvMerchantWebsite.paintFlags = tvMerchantWebsite.getPaintFlags() or Paint.UNDERLINE_TEXT_FLAG
+                    tvMerchantWebsite.setOnClickListener { onMerchantWebClick.invoke(adapterPosition) }
+                } else {
+                    tvMerchantWebsite.visibility = View.GONE
+                }
                 tvMerchantName.text = merchant.name
                 tvMerchantLocation.text = merchant.country
-                tvMerchantEmail.text = merchant.email
-                tvMerchantEmail.setOnClickListener { onEmailMerchantClick.invoke(adapterPosition) }
+                if (merchant.email.isEmpty()) {
+                    tvMerchantEmail.visibility = View.GONE
+                } else {
+                    tvMerchantEmail.visibility = View.VISIBLE
+                    tvMerchantEmail.text = merchant.email
+                }
+                tvMerchantEmail.setOnClickListener { onMerchantEmailClick.invoke(adapterPosition) }
             }
         }
     }

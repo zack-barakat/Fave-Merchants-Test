@@ -50,6 +50,15 @@ constructor(dataManager: IDataManager) : BaseMvpPresenter<MerchantsSearchContrac
         }
     }
 
+    override fun onMerchantNameClick(position: Int) {
+        if (mMerchants.size >= position) {
+            val merchant = mMerchants[position]
+            if (merchant.website.isNotEmpty()) {
+                view.openMerchantWebsite(merchant.website)
+            }
+        }
+    }
+
     private fun searchAndDisplayMerchants(query: String) {
         view.showProgress()
         val disposable = mFaveMerchantRepository.getMerchants(query)
@@ -67,6 +76,5 @@ constructor(dataManager: IDataManager) : BaseMvpPresenter<MerchantsSearchContrac
                 handleApiError(it, ErrorView.ERROR_DIALOG)
             })
         addToSubscription(disposable)
-
     }
 }
