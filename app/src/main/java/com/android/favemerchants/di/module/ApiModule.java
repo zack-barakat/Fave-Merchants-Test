@@ -26,7 +26,7 @@ import static com.android.favemerchants.data.network.IApiHelper.Factory.NETWORK_
 public class ApiModule {
 
 
-    public static final String URL = "http://fave.test.com/mobile/";
+    public static final String URL = "http://10.0.2.2:9200/";
 
     public ApiModule() {
     }

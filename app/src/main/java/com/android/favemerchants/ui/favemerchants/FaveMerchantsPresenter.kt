@@ -19,7 +19,7 @@ constructor(dataManager: IDataManager) : BaseMvpPresenter<FaveMerchantsContracts
 
     private fun fetchAndShowFaveMerchants() {
         view.showProgress()
-        val disposable = mFaveMerchantRepository.getMerchants()
+        val disposable = mFaveMerchantRepository.getMerchants(0, 10)
             .subscribe({
                 mMerchants = it
                 view.hideProgress()

@@ -34,7 +34,7 @@ class MerchantsAdapter(val onEmailMerchantClick: (position: Int) -> Unit) :
         fun bind(merchant: Merchant) {
             with(itemView) {
                 tvMerchantName.text = merchant.name
-                tvMerchantLocation.text = merchant.location
+                tvMerchantLocation.text = merchant.country
                 tvMerchantEmail.text = merchant.email
                 tvMerchantEmail.setOnClickListener { onEmailMerchantClick.invoke(adapterPosition) }
             }

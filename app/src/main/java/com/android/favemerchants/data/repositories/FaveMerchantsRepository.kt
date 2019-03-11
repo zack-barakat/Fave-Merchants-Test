@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 
 interface IFaveMerchantRepository {
-    fun getMerchants(): Observable<ArrayList<Merchant>>
+    fun getMerchants(from: Int, size: Int): Observable<ArrayList<Merchant>>
 
     fun getMerchants(query: String): Observable<ArrayList<Merchant>>
 }
@@ -22,15 +22,15 @@ open class FaveMerchantRepository @Inject constructor(private val apiHelper: IAp
      * get the list of fave merchants and persist them in memory
      * @return list of fave merchants
      */
-    override fun getMerchants(): Observable<ArrayList<Merchant>> {
-        return if (mFaveMerchants.isNotEmpty()) {
-            Observable.just(mFaveMerchants)
-        } else {
-            apiHelper.faveMerchants
-                .doOnNext {
-                    mFaveMerchants = it
-                }
-        }
+    override fun getMerchants(from: Int, size: Int): Observable<ArrayList<Merchant>> {
+        return apiHelper.getFaveMerchants(from, size)
+            .map { response ->
+                val merchants = response.hits.merchants
+                ArrayList(merchants.map { it.merchant })
+            }
+            .doOnNext {
+                mFaveMerchants.addAll(it)
+            }
     }
 
     /**
@@ -38,8 +38,10 @@ open class FaveMerchantRepository @Inject constructor(private val apiHelper: IAp
      * @return list of fave merchants
      */
     override fun getMerchants(query: String): Observable<ArrayList<Merchant>> {
-        return Observable.just(mFaveMerchants)
-            .map { merchants -> merchants.filter { it.name.contains(query, true) } }
-            .map { ArrayList(it) }
+        return apiHelper.searchForFaveMerchants(query)
+            .map { response ->
+                val merchants = response.hits.merchants
+                ArrayList(merchants.map { it.merchant })
+            }
     }
 }

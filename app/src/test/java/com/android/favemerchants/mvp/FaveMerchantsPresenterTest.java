@@ -38,12 +38,12 @@ public class FaveMerchantsPresenterTest extends AppRobolectricTestCase {
     @Test
     public void onViewAttach_shouldShowMerchants() {
         //Given
-        when(apiHelper.getFaveMerchants()).thenReturn(Observable.just(TestDataGenerator.getMerchants()));
+        when(apiHelper.getFaveMerchants(0, 10)).thenReturn(Observable.just(TestDataGenerator.Companion.getMerchantsResponse()));
         //When
         presenter.onAttachView(view);
         rule.advanceTimeBy(1, TimeUnit.SECONDS);
         //verify
-        verify(view).showMerchants(TestDataGenerator.getMerchants());
+        verify(view).showMerchants(TestDataGenerator.Companion.getMerchantArrayList());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class FaveMerchantsPresenterTest extends AppRobolectricTestCase {
     public void onEmailClick_shouldOpenEmailScreen() {
         //Given
         presenter.onAttachView(view);
-        Merchant merchant = TestDataGenerator.getMerchants().get(0);
+        Merchant merchant = TestDataGenerator.Companion.getMerchantArrayList().get(0);
 
         //When
         presenter.onEmailMerchantClick(0);

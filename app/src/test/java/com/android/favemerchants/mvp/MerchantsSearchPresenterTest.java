@@ -41,12 +41,14 @@ public class MerchantsSearchPresenterTest extends AppRobolectricTestCase {
     public void onSearchWithResult_shouldShowMerchants() {
         //Given
         presenter.onAttachView(view);
-        String query = "Sub";
-        when(faveMerchantRepository.getMerchants()).thenReturn(Observable.just(TestDataGenerator.getMerchants()));
-        ArrayList<Merchant> merchants = (ArrayList<Merchant>) TestDataGenerator.getMerchants().stream().filter(merchant -> merchant.getName().contains(query)).collect(Collectors.toList());
+        String query = "a";
+        when(apiHelper.searchForFaveMerchants(query)).thenReturn(Observable.just(TestDataGenerator.Companion.getMerchantsResponse()));
+
+        when(faveMerchantRepository.getMerchants(0, 10)).thenReturn(Observable.just(TestDataGenerator.Companion.getMerchantArrayList()));
+        ArrayList<Merchant> merchants = (ArrayList<Merchant>) TestDataGenerator.Companion.getMerchantArrayList().stream().filter(merchant -> merchant.getName().contains(query)).collect(Collectors.toList());
         when(faveMerchantRepository.getMerchants(query)).thenReturn(Observable.just(merchants));
         //When
-        presenter.onQueryChange("Sub");
+        presenter.onQueryChange(query);
         rule.advanceTimeBy(1, TimeUnit.SECONDS);
         //verify
         verify(view).showMerchantsSearchResult(merchants);
@@ -56,9 +58,9 @@ public class MerchantsSearchPresenterTest extends AppRobolectricTestCase {
     public void onSearchEmpty_shouldShowEmptyMerchantsResult() {
         //Given
         presenter.onAttachView(view);
-        when(apiHelper.getFaveMerchants()).thenReturn(Observable.just(TestDataGenerator.getMerchants()));
+        when(apiHelper.searchForFaveMerchants(anyString())).thenReturn(Observable.just(any()));
         //When
-        presenter.onQueryChange("Subssss");
+        presenter.onQueryChange(anyString());
         rule.advanceTimeBy(1, TimeUnit.SECONDS);
         //verify
         verify(view).showEmptyMerchantsResults();
