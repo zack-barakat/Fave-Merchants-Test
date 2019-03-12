@@ -13,7 +13,6 @@ import com.android.favemerchants.R
 import com.android.favemerchants.data.model.Merchant
 import com.android.favemerchants.ui.base.BaseMvpActivity
 import com.android.favemerchants.ui.base.BasePresenter
-import com.android.favemerchants.ui.favemerchants.MerchantsAdapter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

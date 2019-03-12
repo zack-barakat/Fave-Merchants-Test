@@ -12,6 +12,8 @@ constructor(dataManager: IDataManager) : BaseMvpPresenter<FaveMerchantsContracts
 
     private var mMerchants = arrayListOf<Merchant>()
 
+    private var from = 0
+
     override fun onAttachView(view: FaveMerchantsContracts.View) {
         super.onAttachView(view)
         fetchAndShowFaveMerchants()
@@ -19,16 +21,26 @@ constructor(dataManager: IDataManager) : BaseMvpPresenter<FaveMerchantsContracts
 
     private fun fetchAndShowFaveMerchants() {
         view.showProgress()
-        val disposable = mFaveMerchantRepository.getMerchants(0, 10)
-            .subscribe({
-                mMerchants = it
+        val disposable = mFaveMerchantRepository.getMerchants(from, 10)
+            .subscribe({ merchants ->
                 view.hideProgress()
-                view.showMerchants(mMerchants)
+                if (merchants.isNotEmpty()) {
+                    if (mMerchants.size > 0) {
+                        view.removeLoadingMore()
+                    }
+                    mMerchants.addAll(merchants)
+                    view.showMerchants(mMerchants)
+                    from = mMerchants.size
+                }
             }, {
                 view.hideProgress()
                 handleApiError(it, ErrorView.ERROR_TOAST)
             })
         addToSubscription(disposable)
+    }
+
+    override fun loadMoreMerchants() {
+        fetchAndShowFaveMerchants()
     }
 
     override fun onSearchClick() {

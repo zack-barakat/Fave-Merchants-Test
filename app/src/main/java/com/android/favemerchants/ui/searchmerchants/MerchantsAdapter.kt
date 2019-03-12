@@ -1,4 +1,4 @@
-package com.android.favemerchants.ui.favemerchants
+package com.android.favemerchants.ui.searchmerchants
 
 import android.graphics.Paint
 import android.support.v7.widget.RecyclerView
@@ -39,7 +39,7 @@ class MerchantsAdapter(
             with(itemView) {
                 if (merchant.website.isNotEmpty()) {
                     tvMerchantWebsite.visibility = View.VISIBLE
-                    tvMerchantWebsite.paintFlags = tvMerchantWebsite.getPaintFlags() or Paint.UNDERLINE_TEXT_FLAG
+                    tvMerchantWebsite.paintFlags = tvMerchantWebsite.paintFlags or Paint.UNDERLINE_TEXT_FLAG
                     tvMerchantWebsite.setOnClickListener { onMerchantWebClick.invoke(adapterPosition) }
                 } else {
                     tvMerchantWebsite.visibility = View.GONE

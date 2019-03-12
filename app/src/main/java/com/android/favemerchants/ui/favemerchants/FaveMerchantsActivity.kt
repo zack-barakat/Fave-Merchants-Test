@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import com.android.favemerchants.R
 import com.android.favemerchants.data.model.Merchant
@@ -21,7 +22,7 @@ class FaveMerchantsActivity : BaseMvpActivity(), FaveMerchantsContracts.View {
     @Inject
     lateinit var mPresenter: FaveMerchantsContracts.Presenter<FaveMerchantsContracts.View>
 
-    private lateinit var mAdapter: MerchantsAdapter
+    private lateinit var mAdapter: MerchantsPaginatedAdapter
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         activityComponent?.inject(this)
@@ -51,22 +52,48 @@ class FaveMerchantsActivity : BaseMvpActivity(), FaveMerchantsContracts.View {
     }
 
     private fun setupMerchantsRecyclerView() {
-        mAdapter = MerchantsAdapter({ position ->
+        mAdapter = MerchantsPaginatedAdapter({ position ->
             mPresenter.onEmailMerchantClick(position)
         }, { position ->
             mPresenter.onMerchantNameClick(position)
         })
         rvMerchants.adapter = mAdapter
-        val gridLayoutManager = LinearLayoutManager(this)
-        rvMerchants.layoutManager = gridLayoutManager
+        val linearLayoutManager = LinearLayoutManager(this)
+        rvMerchants.layoutManager = linearLayoutManager
+
+        rvMerchants.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val visibleItemCount = linearLayoutManager.childCount
+                val totalItemCount = linearLayoutManager.itemCount
+                val pastVisibleItems = linearLayoutManager.findFirstVisibleItemPosition()
+
+                if (visibleItemCount + pastVisibleItems >= totalItemCount && !isLoading) {
+                    val merchant = Merchant("", "", "", "", "")
+                    merchant.type = "LOADING"
+                    mAdapter.addLoadingItem(merchant)
+                    mPresenter.loadMoreMerchants()
+                    isLoading = true
+                }
+            }
+        })
     }
 
     public override fun getPresenter(): BasePresenter<*> {
         return mPresenter
     }
 
+    private var isLoading: Boolean = false
+
     override fun showMerchants(merchants: ArrayList<Merchant>) {
-        mAdapter.refreshMerchants(merchants)
+        if (merchants.size > 0) {
+            mAdapter.addItems(merchants)
+            isLoading = false
+        }
+    }
+
+    override fun removeLoadingMore() {
+        mAdapter.removeLoadingItem()
     }
 
     override fun openSearchScreen() {
@@ -89,6 +116,5 @@ class FaveMerchantsActivity : BaseMvpActivity(), FaveMerchantsContracts.View {
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()
         }
-
     }
 }

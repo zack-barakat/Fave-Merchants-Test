@@ -9,6 +9,8 @@ interface FaveMerchantsContracts {
     interface View : BaseView {
         fun showMerchants(merchants: ArrayList<Merchant>)
 
+        fun removeLoadingMore()
+
         fun openSearchScreen()
 
         fun openEmailMerchantScreen(merchantName: String, email: String)
@@ -19,6 +21,8 @@ interface FaveMerchantsContracts {
 
     interface Presenter<V : View> : BasePresenter<V> {
         fun onSearchClick()
+
+        fun loadMoreMerchants()
 
         fun onEmailMerchantClick(position: Int)
 

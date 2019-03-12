@@ -64,4 +64,6 @@ data class Merchant(
     val email: String,
     @SerializedName("website")
     val website: String
-) : Parcelable
+) : Parcelable {
+    var type: String = "MERCHANT"
+}
