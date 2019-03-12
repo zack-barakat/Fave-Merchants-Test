@@ -13,10 +13,10 @@ import retrofit2.http.Query;
 public interface IApiHelper {
 
 
-    @GET("merchants_index/merchants/_search?from=0&size=20")
+    @GET("merchants_index/merchants/_search")
     Observable<MerchantsResponse> getFaveMerchants(@Query("from") int from, @Query("size") int size);
 
-    @GET("merchants_index/merchants/_search?from=0&size=20")
+    @GET("merchants_index/merchants/_search")
     Observable<MerchantsResponse> searchForFaveMerchants(@Query("q") String query);
 
     class Factory {

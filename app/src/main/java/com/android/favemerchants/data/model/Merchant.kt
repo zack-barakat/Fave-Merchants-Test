@@ -30,7 +30,6 @@ data class Shards(
 
 @Parcelize
 data class Hits(
-    @SerializedName("hits")
     val merchants: ArrayList<MerchantHit>,
     @SerializedName("max_score")
     val maxScore: Double,
